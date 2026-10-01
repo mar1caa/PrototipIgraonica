@@ -1,0 +1,106 @@
+<!--
+  FAJL: gallery.html
+  SVRHA: Upload i uređivanje fotografija.
+  th:* atributi su Thymeleaf i vrednosti dolaze iz Java controller-a/modela.
+  Tekst koji vidi korisnik možeš menjati direktno ovde, ali ne briši th:* atribute bez razloga.
+-->
+<!doctype html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Galerija</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="adminbg">
+<!-- ADMIN BOČNI MENI -->
+<aside class="sidebar">
+    <div class="brand light"><span class="brandmark">BB</span><span>Admin</span></div>
+    <a th:href="@{/admin}">Dashboard</a>
+    <a th:href="@{/admin/slots}">Termini</a>
+    <a th:href="@{/admin/settings}">Podaci igraonice</a>
+    <a th:href="@{/admin/catalog}">Cene i ponuda</a>
+    <a class="active" th:href="@{/admin/gallery}">Galerija</a>
+</aside>
+
+<!-- GLAVNI SADRŽAJ STRANICE -->
+<main class="adminmain">
+    <div class="admin-page-head">
+        <div>
+            <p class="eyebrow">Vlasnik</p>
+            <h1>Galerija</h1>
+            <p class="admin-subtitle">Dodajte fotografije direktno sa računara ili telefona. Prva fotografija koristi se kao naslovna na početnoj strani.</p>
+        </div>
+    </div>
+
+    <div class="alert ok" th:if="${message}" th:text="${message}"></div>
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+
+    <section class="panel gallery-upload-panel">
+        <div class="panel-heading">
+            <div>
+                <p class="eyebrow">Nove fotografije</p>
+                <h2>Dodaj u galeriju</h2>
+                <p>Možete izabrati više JPG, PNG ili WEBP fotografija odjednom. Maksimalno 8 MB po slici.</p>
+            </div>
+        </div>
+
+        <form class="gallery-upload-form" th:action="@{/admin/gallery}" method="post" enctype="multipart/form-data" id="galleryUploadForm">
+            <label class="upload-dropzone" for="galleryFiles" id="galleryDropzone">
+                <span class="upload-icon">＋</span>
+                <strong>Izaberite fotografije</strong>
+                <small>Kliknite ovde ili prevucite slike sa računara.</small>
+                <input type="file" id="galleryFiles" name="images" accept="image/jpeg,image/png,image/webp" multiple required>
+            </label>
+
+            <div id="galleryPreview" class="gallery-preview" hidden></div>
+
+            <label>Opis fotografije za Google i pristupačnost
+                <input name="altText" maxlength="180" placeholder="Npr. Prostor za dečje rođendane u BlaBla igraonici">
+                <small class="field-hint">Ako dodajete više slika, sistem će ih automatski numerisati. Opis možete kasnije promeniti za svaku sliku posebno.</small>
+            </label>
+
+            <button class="btn" type="submit">Dodaj fotografije</button>
+        </form>
+    </section>
+
+    <section class="panel" th:if="${!images.isEmpty()}">
+        <div class="panel-heading">
+            <div>
+                <p class="eyebrow">Objavljeno</p>
+                <h2>Fotografije na sajtu</h2>
+                <p>Fotografija označena kao naslovna prikazuje se prva i koristi se u glavnom delu početne strane.</p>
+            </div>
+        </div>
+
+        <div class="admin-gallery-grid">
+            <article class="admin-gallery-card" th:each="g,st:${images}">
+                <div class="admin-gallery-image-wrap">
+                    <img th:src="@{'/uploads/'+${g.fileName}}" th:alt="${g.altText}">
+                    <span class="cover-chip" th:if="${st.first}">Naslovna</span>
+                </div>
+
+                <form class="gallery-alt-form" th:action="@{'/admin/gallery/'+${g.id}+'/alt'}" method="post">
+                    <label>Opis slike
+                        <input name="altText" maxlength="180" th:value="${g.altText}" placeholder="Opis fotografije">
+                    </label>
+                    <button class="ghost small" type="submit">Sačuvaj opis</button>
+                </form>
+
+                <div class="gallery-card-actions">
+                    <form th:if="${!st.first}" th:action="@{'/admin/gallery/'+${g.id}+'/cover'}" method="post">
+                        <button class="ghost small" type="submit">Postavi kao naslovnu</button>
+                    </form>
+                    <form th:action="@{'/admin/gallery/'+${g.id}+'/delete'}" method="post" onsubmit="return confirm('Obrisati ovu fotografiju?');">
+                        <button class="danger small" type="submit">Obriši</button>
+                    </form>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <div class="empty" th:if="${images.isEmpty()}">Još nema fotografija. Dodajte prve slike iznad.</div>
+</main>
+<script th:src="@{/js/admin-gallery.js}"></script>
+</body>
+</html>

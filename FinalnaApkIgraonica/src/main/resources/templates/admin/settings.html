@@ -1,0 +1,39 @@
+<!--
+  FAJL: settings.html
+  SVRHA: Globalni podaci igraonice i informacija o email statusu.
+  th:* atributi su Thymeleaf i vrednosti dolaze iz Java controller-a/modela.
+  Tekst koji vidi korisnik možeš menjati direktno ovde, ali ne briši th:* atribute bez razloga.
+-->
+<!doctype html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Podaci igraonice</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body class="adminbg">
+<!-- ADMIN BOČNI MENI -->
+<aside class="sidebar"><div class="brand light"><span class="brandmark">BB</span><span>Admin</span></div><a th:href="@{/admin}">Dashboard</a><a th:href="@{/admin/slots}">Termini</a><a class="active" th:href="@{/admin/settings}">Podaci igraonice</a><a th:href="@{/admin/catalog}">Cene i ponuda</a><a th:href="@{/admin/gallery}">Galerija</a></aside>
+<!-- GLAVNI SADRŽAJ STRANICE -->
+<main class="adminmain">
+    <div class="admin-page-head"><div><p class="eyebrow">Vlasnik</p><h1>Podaci igraonice</h1><p class="admin-subtitle">Osnovne informacije koje se prikazuju roditeljima i koriste za Google pretragu.</p></div></div>
+    <div class="alert ok" th:if="${message}" th:text="${message}"></div>
+    <form class="panel stack" th:action="@{/admin/settings}" method="post" th:object="${settings}">
+        <div class="fields"><label>Naziv<input th:field="*{name}"></label><label>Grad<input th:field="*{city}"></label><label>Adresa<input th:field="*{address}"></label><label>Telefon<input th:field="*{phone}"></label><label>Email<input th:field="*{email}"></label><label>Instagram<input th:field="*{instagram}"></label><label>Facebook<input th:field="*{facebook}"></label></div>
+        <label>Kratak opis<input th:field="*{shortDescription}"></label>
+        <label>Naslov na početnoj<input th:field="*{heroTitle}"></label>
+        <label>Podnaslov<input th:field="*{heroSubtitle}"></label>
+        <label>O nama<textarea rows="5" th:field="*{aboutText}"></textarea></label>
+        <div class="panel-heading"><div><p class="eyebrow">Google</p><h2>SEO podaci</h2><p>Ovo pomaže pretraživaču da razume naziv i opis igraonice.</p></div></div>
+        <label>Google naslov<input th:field="*{seoTitle}"></label>
+        <label>Google opis<textarea rows="3" th:field="*{seoDescription}"></textarea></label>
+        <button class="btn">Sačuvaj izmene</button>
+    </form>
+
+    <section class="panel mail-status-panel">
+        <div class="panel-heading"><div><p class="eyebrow">Email obaveštenja</p><h2>Automatske poruke roditeljima</h2><p>Kada je email slanje uključeno, roditelj dobija poruku nakon slanja zahteva i nakon promene statusa rezervacije.</p></div></div>
+        <div class="mail-status-row">
+            <span class="status-chip" th:classappend="${mailEnabled} ? ' status-on' : ' status-off'" th:text="${mailEnabled} ? 'Uključeno' : 'Isključeno'"></span>
+            <span th:if="${mailEnabled and mailSender != null and !mailSender.isBlank()}" th:text="'Pošiljalac: '+${mailSender}"></span>
+            <span th:if="${!mailEnabled}">Za lokalni rad aplikacije email može ostati isključen. Za pravo slanje podesi MAIL_ENABLED, MAIL_USERNAME i MAIL_PASSWORD.</span>
+        </div>
+    </section>
+</main>
+</body>
+</html>

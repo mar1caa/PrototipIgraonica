@@ -1,0 +1,142 @@
+<!--
+  FAJL: dashboard.html
+  SVRHA: Glavni admin dashboard, statistika, rezervacije i kalendar.
+  th:* atributi su Thymeleaf i vrednosti dolaze iz Java controller-a/modela.
+  Tekst koji vidi korisnik možeš menjati direktno ovde, ali ne briši th:* atribute bez razloga.
+-->
+<!doctype html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Admin dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="adminbg">
+<!-- ADMIN BOČNI MENI -->
+<aside class="sidebar">
+    <div class="brand light"><span class="brandmark">BB</span><span>Admin</span></div>
+    <a class="active" th:href="@{/admin}">Dashboard</a>
+    <a th:href="@{/admin#calendar}">Kalendar</a>
+    <a th:href="@{/admin/slots}">Termini</a>
+    <a th:href="@{/admin/settings}">Podaci igraonice</a>
+    <a th:href="@{/admin/catalog}">Cene i ponuda</a>
+    <a th:href="@{/admin/gallery}">Galerija</a>
+    <form th:action="@{/logout}" method="post"><button>Odjava</button></form>
+</aside>
+
+<!-- GLAVNI SADRŽAJ STRANICE -->
+<main class="adminmain">
+    <div class="adminhead">
+        <div><p class="eyebrow">BlaBla sistem</p><h1>Dashboard</h1><p class="admin-subtitle">Pregled zahteva i potvrđenih rođendana na jednom mestu.</p></div>
+        <a class="ghost" th:href="@{/}">Javni sajt ↗</a>
+    </div>
+
+    <div class="stats stats-three">
+        <div class="stat"><span>Novi zahtevi</span><strong th:text="${pendingCount}">0</strong><small>čekaju obradu</small></div>
+        <div class="stat"><span>Potvrđeni</span><strong th:text="${confirmedCount}">0</strong><small>aktivne rezervacije</small></div>
+        <div class="stat"><span>Odbijeni</span><strong th:text="${rejectedCount}">0</strong><small>arhivirani zahtevi</small></div>
+    </div>
+
+    <section class="panel calendar-panel" id="calendar">
+        <div class="panel-heading calendar-heading">
+            <div>
+                <p class="eyebrow">Raspored</p>
+                <h2>Kalendar rođendana</h2>
+                <p>Brz pregled potvrđenih rođendana i zahteva koji čekaju obradu.</p>
+            </div>
+            <div class="calendar-controls">
+                <button class="calendar-nav-btn" id="calendarPrev" type="button" aria-label="Prethodni mesec">←</button>
+                <strong id="calendarMonthLabel">Mesec</strong>
+                <button class="calendar-nav-btn" id="calendarNext" type="button" aria-label="Sledeći mesec">→</button>
+                <button class="calendar-today-btn" id="calendarToday" type="button">Danas</button>
+            </div>
+        </div>
+
+        <div class="calendar-legend" aria-label="Legenda statusa">
+            <span><i class="calendar-dot confirmed-dot"></i> Potvrđeno</span>
+            <span><i class="calendar-dot pending-dot"></i> Na čekanju</span>
+        </div>
+
+        <div class="calendar-shell">
+            <div class="admin-calendar" id="adminCalendar" aria-live="polite"></div>
+        </div>
+
+        <div id="calendarBookingData" class="calendar-data" aria-hidden="true">
+            <div th:each="b:${allBookings}"
+                 th:if="${b.status.name() == 'PENDING' or b.status.name() == 'CONFIRMED'}"
+                 class="calendar-booking-source"
+                 th:attr="data-date=${b.date},
+                          data-status=${b.status.name()},
+                          data-time=${b.timeSlot},
+                          data-child=${b.childName},
+                          data-parent=${b.parentName},
+                          data-url=@{'/admin/bookings/'+${b.id}}">
+            </div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-heading"><div><p class="eyebrow">Za obradu</p><h2>Novi zahtevi</h2></div><span class="count-pill" th:text="${pendingCount}">0</span></div>
+        <div class="tablewrap">
+            <table>
+                <thead><tr><th>Roditelj</th><th>Datum</th><th>Termin</th><th>Dete</th><th>Status</th><th></th></tr></thead>
+                <tbody>
+                <tr th:each="b:${pending}">
+                    <td><strong th:text="${b.parentName}"></strong><small class="table-sub" th:text="${b.phone}"></small></td>
+                    <td th:text="${b.displayDate}"></td>
+                    <td th:text="${b.timeSlot}"></td>
+                    <td th:text="${b.childName+' · '+b.numberOfChildren+' dece'}"></td>
+                    <td><span class="badge pending">Na čekanju</span></td>
+                    <td><a class="smallbtn" th:href="@{'/admin/bookings/'+${b.id}}">Otvori</a></td>
+                </tr>
+                <tr th:if="${pending.isEmpty()}"><td colspan="6"><div class="empty-row">Nema novih zahteva za obradu.</div></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="panel confirmed-panel">
+        <div class="panel-heading"><div><p class="eyebrow">Rezervisano</p><h2>Potvrđene rezervacije</h2><p>Potvrđen rođendan ostaje ovde vidljiv i nakon obrade zahteva.</p></div><span class="count-pill success-count" th:text="${confirmedCount}">0</span></div>
+        <div class="tablewrap">
+            <table>
+                <thead><tr><th>Datum</th><th>Roditelj</th><th>Termin</th><th>Dete</th><th>Meni</th><th></th></tr></thead>
+                <tbody>
+                <tr th:each="b:${confirmed}">
+                    <td><strong th:text="${b.displayDate}"></strong></td>
+                    <td th:text="${b.parentName}"></td>
+                    <td th:text="${b.timeSlot}"></td>
+                    <td th:text="${b.childName+' · '+b.numberOfChildren+' dece'}"></td>
+                    <td th:text="${b.menuOption != null ? b.menuOption.name : '—'}"></td>
+                    <td><a class="smallbtn" th:href="@{'/admin/bookings/'+${b.id}}">Detalji</a></td>
+                </tr>
+                <tr th:if="${confirmed.isEmpty()}"><td colspan="6"><div class="empty-row">Još nema potvrđenih rezervacija.</div></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <details class="panel archive-panel">
+        <summary>Sve rezervacije i istorija</summary>
+        <div class="tablewrap archive-table">
+            <table>
+                <thead><tr><th>Datum</th><th>Roditelj</th><th>Termin</th><th>Meni</th><th>Status</th></tr></thead>
+                <tbody>
+                <tr th:each="b:${allBookings}">
+                    <td th:text="${b.displayDate}"></td>
+                    <td><a th:href="@{'/admin/bookings/'+${b.id}}" th:text="${b.parentName}"></a></td>
+                    <td th:text="${b.timeSlot}"></td>
+                    <td th:text="${b.menuOption != null ? b.menuOption.name : '—'}"></td>
+                    <td>
+                        <span class="badge" th:classappend="${b.status.name().toLowerCase()}"
+                              th:text="${b.status.name() == 'PENDING' ? 'Na čekanju' : (b.status.name() == 'CONFIRMED' ? 'Potvrđeno' : 'Odbijeno')}"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </details>
+</main>
+<script th:src="@{/js/admin-calendar.js}"></script>
+</body>
+</html>

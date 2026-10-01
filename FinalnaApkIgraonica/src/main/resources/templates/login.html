@@ -1,0 +1,24 @@
+<!--
+  FAJL: login.html
+  SVRHA: Prijava vlasnika/zaposlenog u admin.
+  th:* atributi su Thymeleaf i vrednosti dolaze iz Java controller-a/modela.
+  Tekst koji vidi korisnik možeš menjati direktno ovde, ali ne briši th:* atribute bez razloga.
+-->
+<!doctype html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin prijava</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body>
+<!-- GLAVNI SADRŽAJ STRANICE -->
+<main class="center">
+    <form class="login" th:action="@{/login}" method="post">
+        <div class="logo">BB</div>
+        <div><p class="eyebrow">BlaBla sistem</p><h1>Admin prijava</h1><p class="muted">Prijavite se za pregled rezervacija i uređivanje ponude.</p></div>
+        <label>Email<input type="email" name="username" autocomplete="username" required></label>
+        <label>Lozinka<input type="password" name="password" autocomplete="current-password" required></label>
+        <div class="alert error" th:if="${param.error}">Pogrešan email ili lozinka.</div>
+        <button class="btn big">Prijavi se</button>
+        <a class="quiet-link" th:href="@{/}">← Javni sajt</a>
+    </form>
+</main>
+</body>
+</html>

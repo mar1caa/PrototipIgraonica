@@ -1,0 +1,96 @@
+<!--
+  FAJL: catalog.html
+  SVRHA: Uređivanje menija i dodatnih usluga.
+  th:* atributi su Thymeleaf i vrednosti dolaze iz Java controller-a/modela.
+  Tekst koji vidi korisnik možeš menjati direktno ovde, ali ne briši th:* atribute bez razloga.
+-->
+<!doctype html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Cene i ponuda</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="adminbg">
+<!-- ADMIN BOČNI MENI -->
+<aside class="sidebar">
+    <div class="brand light"><span class="brandmark">BB</span><span>Admin</span></div>
+    <a th:href="@{/admin}">Dashboard</a><a th:href="@{/admin/slots}">Termini</a>
+    <a th:href="@{/admin/settings}">Podaci igraonice</a>
+    <a class="active" th:href="@{/admin/catalog}">Cene i ponuda</a>
+    <a th:href="@{/admin/gallery}">Galerija</a>
+</aside>
+
+<!-- GLAVNI SADRŽAJ STRANICE -->
+<main class="adminmain">
+    <div class="admin-page-head">
+        <div><p class="eyebrow">Podešavanja ponude</p><h1>Cene i ponuda</h1><p class="admin-subtitle">Rođendan traje 1,5h i uključuje igraonicu, grickalice, sokiće, animatorke i muziku. Ovde menjate meni i dodatne usluge koje roditelji mogu da izaberu.</p></div>
+    </div>
+
+    <div class="alert ok" th:if="${message}" th:text="${message}"></div>
+
+    <section class="panel catalog-section" id="meniji-admin">
+        <div class="panel-heading"><div><p class="eyebrow">01</p><h2>Meniji</h2><p>Vlasnik može sam da menja naziv, opis, cenu po detetu i dostupnost menija.</p></div></div>
+        <div class="admincards">
+            <form class="item catalog-item" th:each="m:${menus}" th:classappend="${m.active} ? '' : ' is-inactive'" th:action="@{/admin/catalog/menu}" method="post">
+                <input type="hidden" name="id" th:value="${m.id}">
+                <div class="item-status-row">
+                    <span class="status-chip" th:classappend="${m.active} ? ' status-on' : ' status-off'" th:text="${m.active} ? 'Aktivno' : 'Neaktivno'"></span>
+                    <span class="item-id" th:text="'#' + ${m.id}"></span>
+                </div>
+                <label>Naziv<input name="name" th:value="${m.name}" required></label>
+                <label>Cena po detetu<input type="number" min="0" step="1" name="pricePerChild" th:value="${m.pricePerChild}" required></label>
+                <label>Opis<textarea rows="3" name="description" th:text="${m.description}"></textarea></label>
+                <div class="item-actions">
+                    <button class="btn" type="submit">Sačuvaj izmene</button>
+                    <button class="toggle-btn" type="submit" th:formaction="@{/admin/catalog/menu/{id}/toggle(id=${m.id})}" th:classappend="${m.active} ? ' deactivate' : ' activate'" th:text="${m.active} ? 'Deaktiviraj' : 'Ponovo aktiviraj'"></button>
+                </div>
+            </form>
+        </div>
+        <div class="add-box">
+            <div><h3>Dodaj novi meni</h3><p>Npr. palačinke, pasta ili posebna vegetarijanska opcija.</p></div>
+            <form class="inlineform" th:action="@{/admin/catalog/menu}" method="post">
+                <input name="name" placeholder="Naziv menija" required>
+                <input type="number" min="0" name="pricePerChild" placeholder="Cena po detetu" required>
+                <input name="description" placeholder="Opis">
+                <button class="btn">+ Dodaj meni</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="panel catalog-section" id="dodaci-admin">
+        <div class="panel-heading"><div><p class="eyebrow">02</p><h2>Dodatne usluge</h2><p>Deaktivirana usluga ostaje ovde u adminu, ali je roditelji ne vide.</p></div></div>
+        <div class="admincards">
+            <form class="item catalog-item" th:each="e:${extras}" th:classappend="${e.active} ? '' : ' is-inactive'" th:action="@{/admin/catalog/extra}" method="post">
+                <input type="hidden" name="id" th:value="${e.id}">
+                <div class="item-status-row">
+                    <span class="status-chip" th:classappend="${e.active} ? ' status-on' : ' status-off'" th:text="${e.active} ? 'Aktivno' : 'Neaktivno'"></span>
+                    <span class="item-id" th:text="'#' + ${e.id}"></span>
+                </div>
+                <div class="fields compact-fields">
+                    <label>Emoji<input name="emoji" th:value="${e.emoji}" placeholder="🎨"></label>
+                    <label>Cena<input type="number" min="0" step="1" name="price" th:value="${e.price}" required></label>
+                </div>
+                <label>Naziv<input name="name" th:value="${e.name}" required></label>
+                <label>Opis<textarea rows="3" name="description" th:text="${e.description}"></textarea></label>
+                <div class="item-actions">
+                    <button class="btn" type="submit">Sačuvaj izmene</button>
+                    <button class="toggle-btn" type="submit" th:formaction="@{/admin/catalog/extra/{id}/toggle(id=${e.id})}" th:classappend="${e.active} ? ' deactivate' : ' activate'" th:text="${e.active} ? 'Deaktiviraj' : 'Ponovo aktiviraj'"></button>
+                </div>
+            </form>
+        </div>
+        <div class="add-box">
+            <div><h3>Dodaj novu uslugu</h3><p>Npr. mađioničar, pinjata ili posebna dekoracija.</p></div>
+            <form class="inlineform" th:action="@{/admin/catalog/extra}" method="post">
+                <input name="emoji" placeholder="🎨">
+                <input name="name" placeholder="Naziv" required>
+                <input type="number" min="0" name="price" placeholder="Cena" required>
+                <input name="description" placeholder="Opis">
+                <button class="btn">+ Dodaj uslugu</button>
+            </form>
+        </div>
+    </section>
+</main>
+</body>
+</html>

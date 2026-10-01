@@ -1,0 +1,96 @@
+<!--
+  FAJL: booking-detail.html
+  SVRHA: Detalji jedne rezervacije i promena statusa.
+  th:* atributi su Thymeleaf i vrednosti dolaze iz Java controller-a/modela.
+  Tekst koji vidi korisnik možeš menjati direktno ovde, ali ne briši th:* atribute bez razloga.
+-->
+<!doctype html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Rezervacija</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="adminbg">
+<!-- ADMIN BOČNI MENI -->
+<aside class="sidebar">
+    <div class="brand light"><span class="brandmark">BB</span><span>Admin</span></div>
+    <a th:href="@{/admin}">← Dashboard</a>
+</aside>
+
+<!-- GLAVNI SADRŽAJ STRANICE -->
+<main class="adminmain">
+    <div class="adminhead">
+        <div><p class="eyebrow">Rezervacija</p><h1 th:text="${booking.parentName}">Roditelj</h1></div>
+        <a class="ghost" th:href="@{/admin}">Nazad na pregled</a>
+    </div>
+
+    <div class="alert ok" th:if="${message}" th:text="${message}"></div>
+    <div class="alert ok" th:if="${mailMessage}" th:text="${mailMessage}"></div>
+    <div class="alert error" th:if="${mailError}" th:text="${mailError}"></div>
+
+    <div class="status-banner pending-banner" th:if="${booking.status.name() == 'PENDING'}">
+        <div class="status-icon">⌛</div>
+        <div><strong>Zahtev čeka potvrdu</strong><p>Kontaktirajte roditelja, proverite detalje i zatim potvrdite ili odbijte rezervaciju.</p></div>
+    </div>
+    <div class="status-banner confirmed-banner" th:if="${booking.status.name() == 'CONFIRMED'}">
+        <div class="status-icon">✓</div>
+        <div><strong>Rezervacija je potvrđena</strong><p>Ovaj rođendan se sada nalazi među potvrđenim rezervacijama na dashboard-u.</p></div>
+    </div>
+    <div class="status-banner rejected-banner" th:if="${booking.status.name() == 'REJECTED'}">
+        <div class="status-icon">×</div>
+        <div><strong>Zahtev je odbijen</strong><p>Zahtev ostaje sačuvan u istoriji i po potrebi može da se vrati na čekanje.</p></div>
+    </div>
+
+    <div class="detailgrid">
+        <div class="panel">
+            <p class="eyebrow">Detalji</p><h2>Rođendan</h2>
+            <dl>
+                <dt>Datum</dt><dd th:text="${booking.displayDate}"></dd>
+                <dt>Termin</dt><dd th:text="${booking.timeSlot}"></dd>
+                <dt>Dete</dt><dd th:text="${booking.childName+' ('+booking.childAge+' god.)'}"></dd>
+                <dt>Broj dece</dt><dd th:text="${booking.numberOfChildren}"></dd>
+                <dt>Trajanje</dt><dd>1,5h</dd>
+                <dt>Meni</dt><dd th:text="${booking.menuOption.name}"></dd>
+                <dt>Dodaci</dt><dd><span th:each="e,st:${booking.extras}" th:text="${e.name + (st.last?'':', ')}"></span><span th:if="${booking.extras.isEmpty()}">Nema</span></dd>
+                <dt>Procena cene</dt><dd class="detail-price" th:text="${#numbers.formatDecimal(booking.estimatedPrice,0,'POINT',0,'COMMA')}+' RSD'"></dd>
+                <dt>Napomena o računu</dt><dd>Piće i druga potrošnja odraslih gostiju nisu uključeni u procenu.</dd>
+            </dl>
+        </div>
+
+        <div class="panel">
+            <p class="eyebrow">Kontakt</p><h2>Roditelj</h2>
+            <dl>
+                <dt>Ime</dt><dd th:text="${booking.parentName}"></dd>
+                <dt>Telefon</dt><dd><a th:href="'tel:'+${booking.phone}" th:text="${booking.phone}"></a></dd>
+                <dt>Email</dt><dd><a th:href="'mailto:'+${booking.email}" th:text="${booking.email}"></a></dd>
+                <dt>Napomena</dt><dd th:text="${booking.parentNote != null and !booking.parentNote.isBlank() ? booking.parentNote : 'Nema napomene'}"></dd>
+            </dl>
+        </div>
+    </div>
+
+    <form class="panel stack action-panel" th:action="@{'/admin/bookings/'+${booking.id}+'/status'}" method="post">
+        <div class="panel-heading"><div><p class="eyebrow">Interno</p><h2>Obrada zahteva</h2><p>Napomena je vidljiva samo zaposlenima i vlasniku.</p></div></div>
+        <label>Interna napomena<textarea rows="5" name="internalNote" th:text="${booking.internalNote}" placeholder="Npr. pozvati posle 17h, dogovorena posebna dekoracija..."></textarea></label>
+
+        <div class="actions booking-actions" th:if="${booking.status.name() == 'PENDING'}">
+            <button class="btn confirm-btn" name="status" value="CONFIRMED">✓ Potvrdi rezervaciju</button>
+            <button class="danger" name="status" value="REJECTED">Odbij zahtev</button>
+            <button class="ghost" name="status" value="PENDING">Sačuvaj napomenu</button>
+        </div>
+
+        <div class="actions booking-actions" th:if="${booking.status.name() == 'CONFIRMED'}">
+            <button class="btn" name="status" value="CONFIRMED">Sačuvaj napomenu</button>
+            <button class="ghost" name="status" value="PENDING">Vrati na čekanje</button>
+            <button class="danger" name="status" value="REJECTED">Otkaži / odbij</button>
+        </div>
+
+        <div class="actions booking-actions" th:if="${booking.status.name() == 'REJECTED'}">
+            <button class="btn" name="status" value="PENDING">Vrati na čekanje</button>
+            <button class="ghost" name="status" value="REJECTED">Sačuvaj napomenu</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!--
+  FAJL: booking-success.html
+  SVRHA: Ekran nakon uspešno sačuvanog zahteva.
+  th:* atributi su Thymeleaf i vrednosti dolaze iz Java controller-a/modela.
+  Tekst koji vidi korisnik možeš menjati direktno ovde, ali ne briši th:* atribute bez razloga.
+-->
+<!doctype html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Zahtev poslat</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="success-page">
+<!-- GLAVNI SADRŽAJ STRANICE -->
+<main class="center">
+    <div class="success">
+        <div class="success-icon">✓</div>
+        <p class="eyebrow">Zahtev je primljen</p>
+        <h1>Hvala!</h1>
+        <p>Igraonica će kontaktirati roditelja radi konačne potvrde termina, cene i detalja proslave.</p>
+        <div class="success-next"><strong>Šta sada?</strong><span>Vaš zahtev je prosleđen timu igraonice i trenutno čeka potvrdu.</span></div>
+        <div class="success-mail" th:if="${emailSent}">✓ Poslali smo i potvrdu prijema na email adresu koju ste uneli.</div>
+        <a class="btn" th:href="@{/}">Nazad na početnu</a>
+    </div>
+</main>
+</body>
+</html>

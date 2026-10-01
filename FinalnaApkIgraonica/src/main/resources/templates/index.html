@@ -1,0 +1,167 @@
+<!--
+  FAJL: index.html
+  SVRHA: Javna početna strana igraonice.
+  th:* atributi su Thymeleaf i vrednosti dolaze iz Java controller-a/modela.
+  Tekst koji vidi korisnik možeš menjati direktno ovde, ali ne briši th:* atribute bez razloga.
+-->
+<!doctype html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title th:text="${settings.seoTitle}">BlaBla Igraonica</title>
+    <meta name="description" th:content="${settings.seoDescription}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<!-- GLAVNA NAVIGACIJA / HEADER -->
+<header class="site-header">
+    <div class="wrap nav">
+        <a class="brand" th:href="@{/}"><span class="brandmark">BB</span><span th:text="${settings.name}">BlaBla Igraonica</span></a>
+        <nav>
+            <a href="#rodjendani">Rođendani</a>
+            <a href="#meni">Meni</a>
+            <a href="#galerija">Galerija</a>
+            <a href="#kontakt">Kontakt</a>
+            <a class="btn btn-small" th:href="@{/booking}">Zakaži rođendan</a>
+        </nav>
+    </div>
+</header>
+
+<!-- GLAVNI SADRŽAJ STRANICE -->
+<main>
+    <!-- HERO: prvi ekran sajta; naslov/tekst dolaze iz PlayroomSettings. -->
+<section class="hero">
+        <div class="wrap hero-grid">
+            <div class="hero-copy">
+                <p class="eyebrow" th:text="${settings.city}">Niš</p>
+                <h1 th:text="${settings.heroTitle}">Rođendan bez komplikacija.</h1>
+                <p class="lead" th:text="${settings.heroSubtitle}">Izaberite termin, meni i dodatne usluge.</p>
+                <div class="actions">
+                    <a class="btn" th:href="@{/booking}">Proveri slobodne termine</a>
+                    <a class="ghost" href="#rodjendani">Pogledaj ponudu</a>
+                </div>
+                <div class="trust-row">
+                    <span>✓ 1,5h proslave</span>
+                    <span>✓ Cena po detetu</span>
+                    <span>✓ Potvrda nakon dogovora</span>
+                </div>
+            </div>
+
+            <div class="hero-media" th:if="${gallery != null and !gallery.isEmpty()}">
+                <img th:src="@{'/uploads/'+${gallery[0].fileName}}" th:alt="${gallery[0].altText}">
+                <div class="hero-media-caption">
+                    <strong th:text="${settings.name}">BlaBla Igraonica</strong>
+                    <span th:text="${settings.shortDescription}">Igraonica & café</span>
+                </div>
+            </div>
+            <div class="hero-placeholder" th:if="${gallery == null or gallery.isEmpty()}">
+                <span class="hero-placeholder-icon">✦</span>
+                <strong th:text="${settings.name}">BlaBla Igraonica</strong>
+                <small>Dodajte fotografije kroz admin panel</small>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-compact">
+        <div class="wrap intro-grid">
+            <div>
+                <p class="eyebrow">O nama</p>
+                <h2>Sve na jednom mestu</h2>
+            </div>
+            <p class="lead" th:text="${settings.aboutText}"></p>
+        </div>
+    </section>
+
+    <section id="rodjendani" class="section soft-section">
+        <div class="wrap">
+            <div class="section-heading birthday-heading">
+                <div>
+                    <p class="eyebrow">Rođendani</p>
+                    <h2>Svaki rođendan uključuje sve osnovno za dobru proslavu</h2>
+                    <p class="section-copy birthday-copy">Sve proslave traju 1,5h. Cena zavisi od broja dece i menija koji izaberete.</p>
+                </div>
+                <a class="quiet-link" th:href="@{/booking}">Proveri termin →</a>
+            </div>
+            <div class="included-grid">
+                <div class="included-item"><span>🎈</span><div><strong>1,5h igraonice</strong><small>Prostor rezervisan za proslavu</small></div></div>
+                <div class="included-item"><span>🥨</span><div><strong>Grickalice</strong><small>Za decu tokom rođendana</small></div></div>
+                <div class="included-item"><span>🥤</span><div><strong>Sokići za decu</strong><small>Uključeni u svaku proslavu</small></div></div>
+                <div class="included-item"><span>🎤</span><div><strong>Animatorke</strong><small>Organizuju igru i zabavu</small></div></div>
+                <div class="included-item"><span>🎵</span><div><strong>Muzika i igra</strong><small>Prilagođeno uzrastu dece</small></div></div>
+                <div class="included-item"><span>🍽️</span><div><strong>Meni po izboru</strong><small>Od izabranog menija zavisi cena po detetu</small></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="meni" class="section">
+        <div class="wrap">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Meni za decu</p>
+                    <h2>Izaberite meni</h2>
+                    <p class="section-copy">Cena je po detetu i u nju ulaze proslava od 1,5h, igraonica, animatorke, muzika, grickalice, sokići i izabrani meni.</p>
+                </div>
+                <a class="quiet-link" th:href="@{/booking}">Zakaži rođendan →</a>
+            </div>
+            <div class="menu-grid">
+                <article class="menu-card" th:each="m:${menus}">
+                    <div>
+                        <h3 th:text="${m.name}">Pizza meni</h3>
+                        <p th:text="${m.description}">Pizza za decu</p>
+                    </div>
+                    <strong th:text="${#numbers.formatDecimal(m.pricePerChild,0,'POINT',0,'COMMA')} + ' RSD'">850 RSD</strong>
+                    <small>po detetu</small>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section soft-section">
+        <div class="wrap">
+            <p class="eyebrow">Dodatne usluge</p>
+            <h2>Dodajte ono što vam treba</h2>
+            <div class="cards cards-four">
+                <article class="card extra-card" th:each="e:${extras}">
+                    <div class="emoji" th:text="${e.emoji}">🎨</div>
+                    <h3 th:text="${e.name}">Face painting</h3>
+                    <p class="muted" th:if="${e.description != null and !e.description.isBlank()}" th:text="${e.description}"></p>
+                    <strong th:text="${#numbers.formatDecimal(e.price,0,'POINT',0,'COMMA')} + ' RSD'">3.000 RSD</strong>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="galerija" class="section">
+        <div class="wrap">
+            <p class="eyebrow">Galerija</p>
+            <h2>Naš prostor</h2>
+            <div class="gallery" th:if="${gallery != null and !gallery.isEmpty()}">
+                <img th:each="g:${gallery}" th:src="@{'/uploads/'+${g.fileName}}" th:alt="${g.altText}">
+            </div>
+            <div class="empty" th:if="${gallery == null or gallery.isEmpty()}">Fotografije će se pojaviti ovde čim ih vlasnik doda u admin panelu.</div>
+        </div>
+    </section>
+
+    <section id="kontakt" class="section section-compact">
+        <div class="wrap contact-card">
+            <div>
+                <p class="eyebrow">Kontakt</p>
+                <h2 th:text="${settings.name}">BlaBla Igraonica</h2>
+                <p><span th:text="${settings.address}"></span><br><span th:text="${settings.phone}"></span> · <span th:text="${settings.email}"></span></p>
+            </div>
+            <a class="btn" th:href="@{/booking}">Pošalji zahtev</a>
+        </div>
+    </section>
+</main>
+
+<!-- FOOTER: javni deo sajta nema link ka admin prijavi.
+     Admin i dalje postoji na /admin ili /login, ali ga roditelj ne vidi u navigaciji. -->
+<footer>
+    <div class="wrap foot">
+        <span th:text="${settings.name}">BlaBla Igraonica</span>
+        <span th:text="${settings.city}">Niš</span>
+    </div>
+</footer>
+</body>
+</html>

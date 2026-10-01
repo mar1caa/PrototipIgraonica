@@ -1,0 +1,100 @@
+<!--
+  FAJL: slots.html
+  SVRHA: Pregled i uređivanje vremena termina.
+  th:* atributi su Thymeleaf i vrednosti dolaze iz Java controller-a/modela.
+  Tekst koji vidi korisnik možeš menjati direktno ovde, ali ne briši th:* atribute bez razloga.
+-->
+<!doctype html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Termini rođendana</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="adminbg">
+<!-- ADMIN BOČNI MENI -->
+<aside class="sidebar">
+    <div class="brand light"><span class="brandmark">BB</span><span>Admin</span></div>
+    <a th:href="@{/admin}">Dashboard</a>
+    <a th:href="@{/admin#calendar}">Kalendar</a>
+    <a class="active" th:href="@{/admin/slots}">Termini</a>
+    <a th:href="@{/admin/settings}">Podaci igraonice</a>
+    <a th:href="@{/admin/catalog}">Cene i ponuda</a>
+    <a th:href="@{/admin/gallery}">Galerija</a>
+    <form th:action="@{/logout}" method="post"><button>Odjava</button></form>
+</aside>
+
+<!-- GLAVNI SADRŽAJ STRANICE -->
+<main class="adminmain">
+    <div class="admin-page-head">
+        <div>
+            <p class="eyebrow">Vlasnik</p>
+            <h1>Termini rođendana</h1>
+            <p class="admin-subtitle">Svaki rođendan traje 1,5h. Menjate samo vreme početka, a završetak se računa automatski.</p>
+        </div>
+        <a class="ghost" th:href="@{/booking}" target="_blank">Pogledaj booking ↗</a>
+    </div>
+
+    <div class="alert ok" th:if="${message}" th:text="${message}"></div>
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+    <div class="alert" th:if="${!canEdit}">Termine možete pregledati, a izmene su dostupne samo vlasniku.</div>
+
+    <section class="panel">
+        <div class="panel-heading">
+            <div>
+                <p class="eyebrow">Dnevni raspored</p>
+                <h2>Aktivni i neaktivni termini</h2>
+                <p>Deaktiviran termin ostaje sačuvan u adminu, ali se više ne nudi roditeljima.</p>
+            </div>
+        </div>
+
+        <div class="slot-list">
+            <article class="slot-card" th:each="s:${slots}" th:classappend="${s.active} ? '' : ' is-inactive'">
+                <div class="slot-card-head">
+                    <div>
+                        <span class="status-chip" th:classappend="${s.active} ? ' status-on' : ' status-off'" th:text="${s.active} ? 'Aktivno' : 'Neaktivno'"></span>
+                        <strong class="slot-preview" th:text="${s.label}">12:00 - 13:30</strong>
+                    </div>
+                    <span class="duration-chip">1,5h</span>
+                </div>
+
+                <form class="slot-edit-form" th:if="${canEdit}" th:action="@{/admin/slots/{id}(id=${s.id})}" method="post">
+                    <label>Početak termina
+                        <input type="time" name="startTime" required step="300" th:value="${s.startTimeDisplay}">
+                    </label>
+                    <div class="slot-actions">
+                        <button class="btn" type="submit">Sačuvaj vreme</button>
+                    </div>
+                </form>
+
+                <form th:if="${canEdit}" th:action="@{/admin/slots/{id}/toggle(id=${s.id})}" method="post">
+                    <button class="toggle-btn slot-toggle" type="submit"
+                            th:classappend="${s.active} ? ' deactivate' : ' activate'"
+                            th:text="${s.active} ? 'Deaktiviraj termin' : 'Ponovo aktiviraj'">Deaktiviraj termin</button>
+                </form>
+            </article>
+        </div>
+
+        <div class="empty-row" th:if="${slots.isEmpty()}">Još nema definisanih termina.</div>
+    </section>
+
+    <section class="panel add-slot-panel" th:if="${canEdit}">
+        <div class="panel-heading">
+            <div>
+                <p class="eyebrow">Novi termin</p>
+                <h2>Dodaj vreme početka</h2>
+                <p>Na primer, ako unesete 10:30, roditelj će videti termin 10:30 - 12:00.</p>
+            </div>
+        </div>
+        <form class="add-slot-form" th:action="@{/admin/slots}" method="post">
+            <label>Početak
+                <input type="time" name="startTime" required step="300">
+            </label>
+            <button class="btn" type="submit">+ Dodaj termin</button>
+        </form>
+        <p class="settings-note">Promena termina utiče na buduće izbore roditelja. Već napravljene rezervacije zadržavaju vreme koje je bilo izabrano prilikom slanja zahteva.</p>
+    </section>
+</main>
+</body>
+</html>

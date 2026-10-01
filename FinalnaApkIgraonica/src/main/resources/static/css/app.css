@@ -1,0 +1,530 @@
+/*
+ * FAJL: app.css
+ * SVRHA: Sav vizuelni stil javnog sajta, booking forme i admin panela.
+ * KAKO MENJATI: Počni od :root promenljivih za boje/radijuse, a zatim koristi sekcije ispod.
+ * Važno: responsive pravila su pri dnu fajla; proveri desktop i mobilni prikaz posle većih izmena.
+ */
+
+/* GLAVNE BOJE DIZAJNA — najbrži način da promeniš izgled celog sajta. */
+:root{
+  --bg:#fbfaf8;
+  --surface:#ffffff;
+  --surface-soft:#f7f3f0;
+  --ink:#252229;
+  --muted:#746d74;
+  --line:#e8e1dc;
+  --accent:#d96f86;
+  --accent-soft:#fbecef;
+  --accent-deep:#9d4055;
+  --dark:#2d2931;
+  --green:#39745a;
+  --green-soft:#edf7f1;
+  --yellow:#9b6b1d;
+  --yellow-soft:#fff6df;
+  --red:#9a4050;
+  --red-soft:#fcebed;
+  --shadow:0 16px 44px rgba(43,35,39,.08);
+  --radius:18px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+img{max-width:100%;display:block}
+.wrap{width:min(1120px,calc(100% - 40px));margin:auto}
+
+/* ---------- typography ---------- */
+h1,h2,h3{color:var(--ink);line-height:1.12;margin-top:0}
+h1{font-size:clamp(2.25rem,5vw,4.15rem);letter-spacing:-.045em;margin-bottom:.35em}
+h2{font-size:clamp(1.7rem,3.2vw,2.65rem);letter-spacing:-.035em;margin-bottom:.4em}
+h3{font-size:1.08rem;margin-bottom:.45em}
+p{margin-top:0}
+.eyebrow{
+  margin:0 0 10px;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  font-size:.72rem;
+  line-height:1.2;
+  font-weight:850;
+  color:var(--accent-deep);
+}
+.lead{font-size:1.05rem;color:var(--muted);max-width:680px}
+.muted,.section-copy{color:var(--muted)}
+.section-copy{max-width:640px;margin-bottom:26px}
+.quiet-link{font-weight:750;color:#5f565d}
+.quiet-link:hover{color:var(--accent-deep)}
+
+/* ---------- header / nav ---------- */
+.site-header,header{
+  position:sticky;
+  top:0;
+  z-index:30;
+  background:rgba(251,250,248,.94);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(232,225,220,.9);
+}
+.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.nav nav{display:flex;align-items:center;gap:22px}
+.nav nav>a:not(.btn){font-size:.94rem;font-weight:700;color:#5f585e}
+.nav nav>a:not(.btn):hover{color:var(--ink)}
+.brand{display:inline-flex;align-items:center;gap:10px;font-weight:850;letter-spacing:-.02em}
+.brandmark,.logo{
+  width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
+  background:var(--accent-soft);color:var(--accent-deep);font-weight:900;font-size:.86rem;
+  border:1px solid #f0cfd7;
+}
+.light .brandmark{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.08);color:#fff}
+
+/* ---------- buttons ---------- */
+.btn,.ghost,.danger,.smallbtn,.toggle-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:12px;padding:12px 16px;border:1px solid transparent;
+  font-weight:800;line-height:1.15;transition:.18s ease;
+}
+.btn{background:var(--dark);color:#fff;box-shadow:0 8px 18px rgba(45,41,49,.12)}
+.btn:hover{transform:translateY(-1px);background:#242129}
+.btn-small{padding:10px 14px;font-size:.9rem}
+.ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.ghost:hover{background:#f8f5f3}
+.danger{background:var(--red-soft);color:var(--red);border-color:#f4d4da}
+.danger:hover{background:#f8dde2}
+.smallbtn{background:#f3efec;color:#4f484d;padding:8px 11px;font-size:.86rem;border-color:#ebe4df}
+.smallbtn:hover{background:#ebe5e1}
+.big{padding:15px 20px;font-size:1rem}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- public home ---------- */
+.hero{padding:72px 0 58px}
+.hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:58px;align-items:center}
+.hero-copy .lead{max-width:620px}
+.hero-copy .actions{margin-top:26px}
+.trust-row{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:28px;color:var(--muted);font-size:.88rem;font-weight:650}
+.hero-media,.hero-placeholder{
+  min-height:430px;border-radius:26px;overflow:hidden;position:relative;background:#f0ebe7;
+  box-shadow:var(--shadow);border:1px solid var(--line);
+}
+.hero-media img{width:100%;height:430px;object-fit:cover}
+.hero-media::after{content:"";position:absolute;inset:auto 0 0;height:42%;background:linear-gradient(transparent,rgba(24,20,23,.58))}
+.hero-media-caption{position:absolute;z-index:2;left:24px;right:24px;bottom:22px;color:#fff;display:grid;gap:2px}
+.hero-media-caption strong{font-size:1.18rem}
+.hero-media-caption span{font-size:.9rem;color:rgba(255,255,255,.84)}
+.hero-placeholder{display:grid;place-items:center;align-content:center;text-align:center;gap:8px;color:#6f666b;background:linear-gradient(145deg,#f8eeef,#f2eee8)}
+.hero-placeholder-icon{font-size:2.4rem;color:var(--accent)}
+.hero-placeholder strong{font-size:1.4rem;color:var(--ink)}
+.hero-placeholder small{color:var(--muted)}
+.section{padding:72px 0}
+.section-compact{padding:56px 0}
+.soft-section{background:#f7f2f0;border-top:1px solid #f0e8e4;border-bottom:1px solid #f0e8e4}
+.intro-grid{display:grid;grid-template-columns:.75fr 1.25fr;gap:58px;align-items:start}
+.section-heading,.panel-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:26px}
+.section-heading h2,.panel-heading h2{margin-bottom:0}
+.panel-heading p{color:var(--muted);margin:6px 0 0}
+.cards{display:grid;gap:16px}
+.cards-three{grid-template-columns:repeat(3,1fr)}
+.cards-four{grid-template-columns:repeat(4,1fr)}
+.card,.panel,.formcard,.login,.success,.stat,.menu-card,.booking-summary{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+}
+.card{padding:22px}
+.package-card{min-height:250px;display:flex;flex-direction:column}
+.package-card p{color:var(--muted);font-size:.94rem}
+.tag,.badge,.status-chip,.count-pill,.summary-label{
+  display:inline-flex;align-items:center;width:max-content;border-radius:999px;padding:6px 9px;
+  font-size:.73rem;font-weight:850;letter-spacing:.01em;
+}
+.tag{background:var(--accent-soft);color:var(--accent-deep)}
+.price{display:block;font-size:1.65rem;letter-spacing:-.03em;margin:8px 0 12px}
+.package-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:12px}
+.package-meta span{font-size:.78rem;color:#665e63;background:#f5f2ef;border-radius:999px;padding:5px 8px}
+
+.birthday-heading{align-items:flex-start}
+.birthday-copy{margin-bottom:0}
+.included-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.included-item{display:flex;gap:13px;align-items:flex-start;background:rgba(255,255,255,.76);border:1px solid var(--line);border-radius:15px;padding:17px}
+.included-item>span{font-size:1.45rem;line-height:1.1}
+.included-item>div{display:grid;gap:3px}
+.included-item strong{font-size:.94rem}
+.included-item small{color:var(--muted);font-size:.78rem;line-height:1.35}
+.included-inline{margin-top:12px;padding:12px 14px;border-radius:12px;background:#f8f4f2;color:#686066;font-size:.82rem;line-height:1.45}
+
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.menu-card{padding:21px;display:grid;grid-template-columns:1fr auto;column-gap:18px;align-items:start}
+.menu-card p{margin:4px 0 0;color:var(--muted);font-size:.9rem}
+.menu-card strong{font-size:1.12rem;white-space:nowrap}
+.menu-card>small{grid-column:2;color:var(--muted);font-size:.75rem;text-align:right}
+.extra-card{min-height:190px;display:flex;flex-direction:column}
+.extra-card .emoji{font-size:1.7rem;margin-bottom:16px}
+.extra-card p{font-size:.86rem;flex:1}
+.extra-card strong{margin-top:auto}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+.gallery img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:16px;border:1px solid var(--line)}
+.empty{padding:28px;border:1px dashed #d8ccc5;border-radius:16px;color:var(--muted);background:rgba(255,255,255,.5)}
+.contact-card{background:var(--dark);color:#fff;border-radius:22px;padding:34px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.contact-card h2{color:#fff;margin-bottom:10px}
+.contact-card p{color:#d9d2d7;margin-bottom:0}
+.contact-card .eyebrow{color:#f0bac5}
+.contact-card .btn{background:#fff;color:var(--dark);box-shadow:none}
+.foot{display:flex;justify-content:space-between;padding:24px 0;color:var(--muted);font-size:.9rem}
+footer{border-top:1px solid var(--line)}
+
+/* ---------- forms ---------- */
+label{display:grid;gap:7px;font-weight:750;font-size:.9rem;color:#3b3539}
+input,select,textarea{
+  width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);
+  outline:none;transition:border-color .16s ease,box-shadow .16s ease,background .16s ease;
+}
+input:focus,select:focus,textarea:focus{border-color:#c98a98;box-shadow:0 0 0 3px rgba(217,111,134,.11);background:#fff}
+textarea{resize:vertical;min-height:90px}
+/* Polja u dva stupca poravnavamo uz gornju ivicu.
+   Ovo je posebno važno za Datum + Termin: Datum ima pomoćni tekst ispod inputa,
+   ali zbog toga Termin ne sme da se spusti niže. */
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+.fields>label{align-self:start;align-content:start}
+.stack{display:grid;gap:16px}
+.alert{padding:13px 15px;border-radius:12px;margin:14px 0;font-weight:700;border:1px solid transparent}
+.alert.error,.error{background:var(--red-soft);color:var(--red);border-color:#f2d6db}
+.alert.ok,.ok{background:var(--green-soft);color:var(--green);border-color:#d3eadc}
+
+/* ---------- booking ---------- */
+.booking-page{padding:54px 0 76px}
+.booking-shell{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start}
+.booking-main{min-width:0}
+.booking-intro{margin-bottom:24px}
+.booking-intro h1{font-size:clamp(2.2rem,4.6vw,3.5rem);margin-bottom:12px}
+.booking-intro .lead{margin-bottom:0}
+.booking-form{display:grid;gap:14px}
+.formcard{padding:22px}
+.step-card{box-shadow:0 6px 18px rgba(43,35,39,.035)}
+.step-head{display:flex;gap:13px;align-items:flex-start;margin-bottom:18px}
+.step-head h3{margin:1px 0 4px;font-size:1.08rem}
+.step-head p{margin:0;color:var(--muted);font-size:.86rem}
+.step-number{width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:var(--accent-soft);color:var(--accent-deep);display:grid;place-items:center;font-weight:900;font-size:.82rem}
+.choice-grid{display:grid;gap:10px}
+.choice{
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;
+  padding:14px;border:1px solid var(--line);border-radius:13px;background:#fff;cursor:pointer;
+  transition:.16s ease;
+}
+.choice:hover{border-color:#d7c3c7;background:#fffdfc}
+.choice.selected{border-color:#d990a0;background:#fff7f9;box-shadow:0 0 0 2px rgba(217,111,134,.08)}
+.choice input{width:auto;accent-color:var(--accent);margin:0}
+.choice-copy{display:grid;gap:2px;min-width:0}
+.choice-copy strong{font-size:.93rem}
+.choice-copy small{color:var(--muted);font-size:.8rem;line-height:1.35}
+.choice>b{font-size:.83rem;white-space:nowrap;color:#4e474c;text-align:right}
+.availability-note{display:block;margin-top:10px;color:var(--muted);font-size:.82rem;font-weight:650}
+.availability-ok{color:var(--green)}
+.availability-info{color:var(--yellow)}
+.availability-error{color:var(--red)}
+.booking-summary{position:sticky;top:94px;padding:22px;box-shadow:0 12px 34px rgba(43,35,39,.055)}
+.summary-label{background:#f2eeeb;color:#625a60;margin-bottom:14px}
+.booking-summary h3{margin-bottom:8px}
+.summary-price{display:block;font-size:1.65rem;letter-spacing:-.035em;line-height:1.15;margin:10px 0 18px}
+.summary-separator{height:1px;background:var(--line);margin:0 0 16px}
+.booking-summary>p{font-size:.86rem;color:var(--muted)}
+.summary-tip{display:flex;gap:9px;padding:12px;background:#f7f4f2;border-radius:12px;margin-top:18px}
+.summary-tip>span{width:22px;height:22px;flex:0 0 22px;border-radius:50%;display:grid;place-items:center;background:#ece6e2;font-size:.75rem;font-weight:900}
+.summary-tip p{margin:0;font-size:.78rem;color:#685f65}
+.booking-submit{width:100%;margin-top:2px}
+.form-disclaimer{text-align:center;color:var(--muted);font-size:.78rem;margin:-4px 14px 0}
+
+/* ---------- success / login ---------- */
+.center{min-height:100vh;display:grid;place-items:center;padding:24px}
+.login,.success{width:min(470px,100%);padding:30px;display:grid;gap:15px;text-align:center;box-shadow:var(--shadow)}
+.login h1,.success h1{font-size:2rem;margin-bottom:0}
+.success-page{background:#f7f4f1}
+.success-icon{width:54px;height:54px;margin:auto;border-radius:50%;display:grid;place-items:center;background:var(--green-soft);color:var(--green);font-size:1.5rem;font-weight:900;border:1px solid #d4eadc}
+.success>p{color:var(--muted)}
+.success-next{display:grid;gap:4px;text-align:left;background:#f7f4f2;border-radius:13px;padding:14px}
+.success-next span{font-size:.85rem;color:var(--muted)}
+.logo{margin:auto;width:52px;height:52px;border-radius:15px}
+
+/* ---------- admin layout ---------- */
+.adminbg{background:#f5f3f1}
+.sidebar{
+  position:fixed;inset:0 auto 0 0;width:238px;background:#2a272e;color:#fff;padding:22px 14px;
+  display:flex;flex-direction:column;gap:5px;z-index:40;
+}
+.sidebar .brand{padding:5px 9px 18px;margin-bottom:4px}
+.sidebar a,.sidebar button{
+  display:block;width:100%;text-align:left;padding:10px 11px;border-radius:9px;color:#ddd7dc;background:transparent;border:0;font-weight:700;font-size:.9rem;
+}
+.sidebar a:hover,.sidebar a.active{background:rgba(255,255,255,.085);color:#fff}
+.sidebar form{margin-top:auto}
+.adminmain{margin-left:238px;padding:34px 38px 60px;max-width:1500px}
+.adminmain>h1,.adminhead h1,.admin-page-head h1{font-size:clamp(2rem,4vw,3.15rem);margin-bottom:8px}
+.adminhead,.admin-page-head{display:flex;align-items:center;justify-content:space-between;gap:22px;margin-bottom:20px}
+.admin-subtitle{color:var(--muted);margin:0;max-width:720px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,220px));gap:14px;margin:20px 0}
+.stats-three{grid-template-columns:repeat(3,minmax(0,220px))}
+.stat{padding:18px 19px}
+.stat span,.stat small{color:var(--muted)}
+.stat strong{display:block;font-size:1.8rem;line-height:1.1;margin:5px 0}
+.stat small{font-size:.77rem}
+.panel{padding:22px;margin:16px 0}
+.panel h2{font-size:1.45rem;letter-spacing:-.025em}
+.tablewrap{overflow:auto;border-radius:12px;border:1px solid #eee8e4}
+table{width:100%;border-collapse:collapse;background:#fff;min-width:720px}
+th,td{text-align:left;padding:12px 13px;border-bottom:1px solid #eee8e4;vertical-align:middle}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:#faf8f6}
+td{font-size:.9rem}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#fdfbf9}
+.table-sub{display:block;color:var(--muted);margin-top:2px;font-size:.76rem}
+.badge.pending{background:var(--yellow-soft);color:var(--yellow)}
+.badge.confirmed{background:var(--green-soft);color:var(--green)}
+.badge.rejected{background:var(--red-soft);color:var(--red)}
+.count-pill{background:#f2eeeb;color:#625b60;min-width:30px;justify-content:center}
+.success-count{background:var(--green-soft);color:var(--green)}
+.empty-row{padding:16px;color:var(--muted);text-align:center}
+.confirmed-panel{border-color:#dce9e1}
+.archive-panel summary{font-weight:800;cursor:pointer;color:#514950}
+.archive-table{margin-top:18px}
+.detailgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+dl{display:grid;grid-template-columns:130px minmax(0,1fr);gap:10px 15px;margin-bottom:0}
+dt{color:var(--muted);font-size:.88rem}
+dd{margin:0;font-weight:700;overflow-wrap:anywhere}
+.detail-price{font-size:1.12rem}
+.status-banner{display:flex;gap:13px;align-items:flex-start;padding:16px 18px;border-radius:14px;margin:16px 0;border:1px solid var(--line)}
+.status-banner strong{display:block;margin-bottom:2px}
+.status-banner p{margin:0;font-size:.86rem;color:var(--muted)}
+.status-icon{width:34px;height:34px;flex:0 0 34px;border-radius:10px;display:grid;place-items:center;font-weight:900}
+.pending-banner{background:var(--yellow-soft);border-color:#f0dfb3}.pending-banner .status-icon{background:#f4e2ad;color:#7d5719}
+.confirmed-banner{background:var(--green-soft);border-color:#d2e8da}.confirmed-banner .status-icon{background:#d4eadc;color:var(--green)}
+.rejected-banner{background:var(--red-soft);border-color:#f1d4da}.rejected-banner .status-icon{background:#f2d7dd;color:var(--red)}
+.action-panel{margin-top:16px}
+.confirm-btn{background:#315f4a}
+.confirm-btn:hover{background:#294f3e}
+
+
+/* ---------- admin calendar ---------- */
+.calendar-panel{scroll-margin-top:18px}
+.calendar-heading{align-items:center}
+.calendar-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.calendar-controls>strong{min-width:138px;text-align:center;font-size:.95rem}
+.calendar-nav-btn,.calendar-today-btn{
+  border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;
+  min-height:38px;padding:8px 11px;font-weight:800;transition:.16s ease;
+}
+.calendar-nav-btn{width:38px;padding:0;font-size:1.05rem}
+.calendar-nav-btn:hover,.calendar-today-btn:hover{background:#f7f3f0;border-color:#ddd4ce}
+.calendar-today-btn{font-size:.82rem;color:#5d555b}
+.calendar-legend{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:-8px 0 16px;color:var(--muted);font-size:.78rem;font-weight:700}
+.calendar-legend span{display:inline-flex;align-items:center;gap:7px}
+.calendar-dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.confirmed-dot{background:#5f9878}.pending-dot{background:#d4a64d}
+.calendar-shell{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
+.admin-calendar{display:grid;grid-template-columns:repeat(7,minmax(108px,1fr));min-width:760px;background:#fff}
+.calendar-weekday{padding:10px 12px;background:#faf8f6;border-right:1px solid #eee8e4;color:var(--muted);font-size:.72rem;font-weight:850;text-transform:uppercase;letter-spacing:.06em}
+.calendar-weekday:nth-child(7){border-right:0}
+.calendar-day{min-height:118px;padding:9px;border-top:1px solid #eee8e4;border-right:1px solid #eee8e4;background:#fff}
+.calendar-day:nth-child(7n+7){border-right:0}
+.calendar-day-empty{background:#fbfaf9}
+.calendar-day-today{background:#fffaf0;box-shadow:inset 0 0 0 1px #ecd7a5}
+.calendar-day-number{min-height:25px;display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:7px}
+.calendar-day-number>span{width:25px;height:25px;display:grid;place-items:center;border-radius:8px;font-size:.78rem;font-weight:850;color:#5c555a}
+.calendar-day-today .calendar-day-number>span{background:#edd59e;color:#664d19}
+.calendar-day-number small{font-size:.65rem;color:#8e6c24;font-weight:800}
+.calendar-events{display:grid;gap:5px}
+.calendar-event{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px;align-items:center;padding:6px 7px;border-radius:8px;border:1px solid transparent;font-size:.72rem;line-height:1.15;transition:.14s ease}
+.calendar-event:hover{transform:translateY(-1px);filter:brightness(.985)}
+.calendar-event.confirmed{background:var(--green-soft);border-color:#d7e9de;color:#2f674d}
+.calendar-event.pending{background:var(--yellow-soft);border-color:#efdfba;color:#79591c}
+.calendar-event-time{font-weight:900;white-space:nowrap}
+.calendar-event-name{font-weight:750;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.calendar-data{display:none}
+
+/* ---------- admin catalog ---------- */
+.catalog-section{scroll-margin-top:18px}
+.admincards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.item{background:#fbfaf9;border:1px solid var(--line);padding:16px;border-radius:14px;display:grid;gap:11px;min-width:0}
+.catalog-item.is-inactive{background:#f2efed;opacity:.78}
+.item-status-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:2px}
+.status-chip.status-on{background:var(--green-soft);color:var(--green)}
+.status-chip.status-off{background:#eae5e2;color:#756c72}
+.item-id{font-size:.74rem;color:#9a9096}
+.compact-fields{gap:10px}
+.item-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px}
+.item-actions .btn,.toggle-btn{padding:10px 11px;font-size:.84rem}
+.toggle-btn.deactivate{background:#f5ecee;color:#8b4857;border-color:#edd8dd}
+.toggle-btn.activate{background:var(--green-soft);color:var(--green);border-color:#d6eadd}
+.add-box{margin-top:18px;padding:18px;border:1px dashed #d7cbc5;border-radius:14px;background:#f8f5f3}
+.add-box h3{margin-bottom:4px}.add-box>div>p{color:var(--muted);font-size:.84rem;margin-bottom:0}
+.inlineform{display:flex;flex-wrap:wrap;gap:9px;align-items:end;margin-top:14px}
+.inlineform input{width:auto;min-width:140px;flex:1}
+
+/* ---------- gallery ---------- */
+.adminGallery article{position:relative}.adminGallery form{position:absolute;right:9px;bottom:9px}.adminGallery button{box-shadow:0 5px 16px rgba(0,0,0,.12)}
+
+/* ---------- responsive ---------- */
+@media(max-width:1000px){
+  .hero-grid{gap:34px}
+  .cards-four{grid-template-columns:repeat(2,1fr)}
+  .included-grid{grid-template-columns:repeat(2,1fr)}
+  .admincards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .booking-shell{grid-template-columns:minmax(0,1fr) 280px}
+}
+
+@media(max-width:900px){
+  .hero-grid,.intro-grid,.detailgrid{grid-template-columns:1fr}
+  .hero{padding-top:52px}
+  .hero-media,.hero-placeholder{min-height:340px}
+  .hero-media img{height:340px}
+  .cards-three{grid-template-columns:1fr 1fr}
+  .menu-grid{grid-template-columns:1fr 1fr}
+  .booking-shell{grid-template-columns:1fr}
+  .booking-summary{position:static;order:-1;display:grid;grid-template-columns:1fr auto;column-gap:20px;align-items:center}
+  .booking-summary .summary-label,.booking-summary h3,.booking-summary .summary-separator,.booking-summary>p,.booking-summary .summary-tip{grid-column:1/-1}
+  .summary-price{grid-column:2;grid-row:2;margin:0;text-align:right}
+  .sidebar{position:static;width:auto;flex-direction:row;align-items:center;overflow:auto;padding:10px 12px}
+  .sidebar .brand{padding:0 10px 0 0;margin:0;white-space:nowrap}
+  .sidebar a,.sidebar button{white-space:nowrap;width:auto;padding:9px 11px}
+  .sidebar form{margin:0 0 0 auto}
+  .adminmain{margin:0;padding:26px 22px 50px}
+  .stats-three{grid-template-columns:repeat(3,1fr)}
+  .nav nav a:not(.btn){display:none}
+}
+
+@media(max-width:680px){
+  .calendar-heading{align-items:stretch}
+  .calendar-controls{width:100%;display:grid;grid-template-columns:38px 1fr 38px auto}
+  .calendar-controls>strong{min-width:0}
+  .calendar-panel{padding:14px}
+  .calendar-legend{margin-top:0}
+
+  .wrap{width:min(100% - 24px,1120px)}
+  h1{font-size:2.35rem}
+  h2{font-size:1.85rem}
+  .section{padding:54px 0}
+  .section-compact{padding:44px 0}
+  .hero{padding:44px 0 40px}
+  .hero-media,.hero-placeholder{min-height:280px;border-radius:20px}
+  .hero-media img{height:280px}
+  .cards-three,.cards-four,.menu-grid,.included-grid,.gallery,.admincards,.stats,.stats-three,.fields{grid-template-columns:1fr}
+  .actions,.contact-card,.foot,.section-heading,.panel-heading,.adminhead,.admin-page-head{align-items:stretch;flex-direction:column}
+  .nav{min-height:64px}
+  .nav .brand>span:last-child{max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .nav>.quiet-link{font-size:.84rem}
+  .trust-row{display:grid;gap:7px}
+  .package-card{min-height:auto}
+  .menu-card{grid-template-columns:1fr auto}
+  .contact-card{padding:25px}
+  .booking-page{padding:34px 0 54px}
+  .booking-intro h1{font-size:2.25rem}
+  .formcard{padding:17px}
+  .choice{grid-template-columns:auto minmax(0,1fr);align-items:start}
+  .choice>b{grid-column:2;text-align:left;color:var(--accent-deep)}
+  .booking-summary{display:block;padding:18px}
+  .summary-price{text-align:left;margin:7px 0 15px}
+  .form-disclaimer{margin-left:0;margin-right:0}
+  .sidebar{gap:3px}
+  .sidebar .brand{display:none}
+  .sidebar form{margin-left:0}
+  .adminmain{padding:20px 12px 44px}
+  .panel{padding:16px}
+  .adminmain>h1,.adminhead h1,.admin-page-head h1{font-size:2rem}
+  dl{grid-template-columns:1fr;gap:3px}
+  dd{margin-bottom:9px}
+  .item-actions{grid-template-columns:1fr}
+  .inlineform{display:grid;grid-template-columns:1fr;width:100%}
+  .inlineform input{width:100%;min-width:0}
+  .booking-actions .btn,.booking-actions .ghost,.booking-actions .danger{width:100%}
+}
+
+@media(max-width:420px){
+  .brandmark{width:34px;height:34px;border-radius:10px}
+  .btn,.ghost,.danger{padding:11px 13px}
+  .hero-copy .actions>a{width:100%}
+  .sidebar a,.sidebar button{font-size:.82rem;padding:8px 9px}
+}
+.small{padding:7px 9px;font-size:.82rem}
+
+/* ---------- admin termini ---------- */
+.slot-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.slot-card{border:1px solid var(--line);border-radius:14px;background:#fbfaf9;padding:16px;display:grid;gap:14px}
+.slot-card.is-inactive{background:#f2efed;opacity:.78}
+.slot-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.slot-card-head>div{display:grid;gap:8px}
+.slot-preview{font-size:1.22rem;letter-spacing:-.02em;color:var(--ink)}
+.duration-chip{background:#f2eeeb;color:#6e646a;border-radius:999px;padding:6px 9px;font-size:.76rem;font-weight:800;white-space:nowrap}
+.slot-edit-form{display:grid;gap:10px}
+.slot-edit-form input[type="time"],.add-slot-form input[type="time"]{font-variant-numeric:tabular-nums}
+.slot-actions{display:flex;gap:8px}.slot-actions .btn{width:100%}
+.slot-toggle{width:100%}
+.add-slot-panel{margin-top:16px}
+.add-slot-form{display:flex;align-items:end;gap:12px;max-width:520px}
+.add-slot-form label{flex:1}.add-slot-form .btn{white-space:nowrap}
+.settings-note{margin:14px 0 0;color:var(--muted);font-size:.84rem;line-height:1.55}
+.field-hint{display:block;margin-top:5px;color:var(--muted);font-size:.75rem;font-weight:600}
+
+@media(max-width:1000px){.slot-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:680px){.slot-list{grid-template-columns:1fr}.add-slot-form{display:grid;grid-template-columns:1fr;max-width:none}.add-slot-form .btn{width:100%}}
+
+/* ---------- minimalna naplata ---------- */
+.minimum-charge-notice{margin-top:14px;padding:13px 15px;border:1px solid #ead7bf;border-radius:12px;background:#fff8ee;color:#6f4f27}
+.minimum-charge-notice[hidden]{display:none}
+.minimum-charge-notice strong{display:block;margin-bottom:4px;color:#5e421f;font-size:.9rem}
+.minimum-charge-notice p{margin:0;font-size:.84rem;line-height:1.5}
+
+/* ---------- date picker ---------- */
+.date-control{position:relative;display:block}
+.date-control>input[type="text"]{padding-right:52px}
+.date-picker-button{
+  position:absolute;right:7px;top:50%;transform:translateY(-50%);width:38px;height:38px;
+  border:1px solid var(--line);border-radius:9px;background:#faf7f5;color:var(--ink);display:grid;place-items:center;
+  cursor:pointer;font-size:1rem;transition:.16s ease;
+}
+.date-picker-button:hover{background:#f3eeeb;border-color:#d8cbc4}
+.date-picker-button:focus-visible{outline:3px solid rgba(217,111,134,.16);outline-offset:2px}
+.native-date-picker{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;right:14px;bottom:0;padding:0!important;border:0!important;pointer-events:none}
+
+/* ---------- gallery upload v4 ---------- */
+.gallery-upload-panel{max-width:980px}
+.gallery-upload-form{display:grid;gap:16px}
+.upload-dropzone{
+  min-height:170px;border:1.5px dashed #d9c8c1;border-radius:16px;background:#fbf8f6;padding:28px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;cursor:pointer;
+  transition:.16s ease;
+}
+.upload-dropzone:hover,.upload-dropzone.dragging{border-color:#c78b98;background:#fff6f8}
+.upload-dropzone input[type="file"]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.upload-icon{width:42px;height:42px;border-radius:13px;background:var(--accent-soft);color:var(--accent-deep);display:grid;place-items:center;font-size:1.4rem;font-weight:800;margin-bottom:5px}
+.upload-dropzone strong{font-size:1rem}
+.upload-dropzone small{color:var(--muted);font-weight:600}
+.gallery-preview{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.gallery-preview[hidden]{display:none}
+.gallery-preview-card{min-width:0;background:#f7f3f0;border:1px solid var(--line);border-radius:12px;padding:7px;display:grid;gap:6px}
+.gallery-preview-card img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px}
+.gallery-preview-card small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:.7rem}
+.gallery-preview-more{display:grid;place-items:center;min-height:100px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-weight:800}
+.admin-gallery-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.admin-gallery-card{border:1px solid var(--line);border-radius:15px;background:#fbfaf9;padding:10px;display:grid;gap:11px;min-width:0}
+.admin-gallery-image-wrap{position:relative}
+.admin-gallery-image-wrap img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:11px}
+.cover-chip{position:absolute;left:8px;top:8px;background:rgba(42,39,46,.86);color:#fff;padding:6px 8px;border-radius:999px;font-size:.69rem;font-weight:850}
+.gallery-alt-form{display:grid;gap:8px}
+.gallery-alt-form input{font-size:.82rem;padding:10px 11px}
+.gallery-card-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.gallery-card-actions form{margin:0}
+.mail-status-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:.86rem}
+.success-mail{padding:12px 14px;border-radius:12px;background:var(--green-soft);color:var(--green);font-size:.84rem;font-weight:750;text-align:left}
+
+@media(max-width:900px){
+  .admin-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gallery-preview{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:680px){
+  .admin-gallery-grid{grid-template-columns:1fr}
+  .gallery-preview{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .upload-dropzone{min-height:145px;padding:22px 14px}
+}

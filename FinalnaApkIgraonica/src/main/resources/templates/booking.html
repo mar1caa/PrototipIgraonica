@@ -1,0 +1,125 @@
+<!--
+  FAJL: booking.html
+  SVRHA: Javna forma za slanje zahteva za rođendan.
+  th:* atributi su Thymeleaf i vrednosti dolaze iz Java controller-a/modela.
+  Tekst koji vidi korisnik možeš menjati direktno ovde, ali ne briši th:* atribute bez razloga.
+-->
+<!doctype html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Zakaži rođendan</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<!-- GLAVNA NAVIGACIJA / HEADER -->
+<header class="site-header">
+    <div class="wrap nav">
+        <a class="brand" th:href="@{/}"><span class="brandmark">BB</span><span th:text="${settings.name}">BlaBla Igraonica</span></a>
+        <a class="quiet-link" th:href="@{/}">← Nazad na sajt</a>
+    </div>
+</header>
+
+<!-- GLAVNI SADRŽAJ STRANICE -->
+<main class="booking-page">
+    <div class="wrap booking-shell">
+        <div class="booking-main">
+            <div class="booking-intro">
+                <p class="eyebrow">Online zahtev</p>
+                <h1>Zakaži rođendan</h1>
+                <p class="lead">Svaki rođendan traje 1,5h. Izaberite termin, broj dece, meni i eventualne dodatne usluge, a igraonica će vas kontaktirati pre konačne potvrde.</p>
+            </div>
+
+            <div class="alert error" th:if="${error}" th:text="${error}"></div>
+
+            <form class="booking-form" th:action="@{/booking}" method="post" id="bookingForm">
+                                <!-- KORAK 1: datum + termin; JS proverava dostupnost preko /booking/availability. -->
+<section class="formcard step-card">
+                    <div class="step-head"><span class="step-number">1</span><div><h3>Datum i termin</h3><p>Izaberite slobodan termin za proslavu od 1,5h.</p></div></div>
+                    <div class="fields">
+                        <label>Datum
+                            <span class="date-control">
+                                <input required type="text" name="date" id="date" inputmode="numeric" autocomplete="off" placeholder="dd/mm/yyyy" maxlength="10" pattern="(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}" aria-describedby="dateHint">
+                                <button type="button" class="date-picker-button" id="datePickerButton" aria-label="Izaberi datum iz kalendara" title="Izaberi datum iz kalendara">📅</button>
+                                <input type="date" id="nativeDatePicker" class="native-date-picker" tabindex="-1" aria-hidden="true">
+                            </span>
+                            <small class="field-hint" id="dateHint">Unesite datum kao dd/mm/yyyy ili ga izaberite iz kalendara.</small>
+                        </label>
+                        <label>Termin
+                            <select required name="timeSlot" id="timeSlot">
+                                <option value="">Izaberi termin</option>
+                                <option th:each="s:${slots}" th:value="${s.label}" th:text="${s.label}"></option>
+                            </select>
+                        </label>
+                    </div>
+                    <small id="availabilityNote" class="availability-note">Izaberite datum da proverimo termine.</small>
+                </section>
+
+                                <!-- KORAK 2: kontakt i podaci o proslavi. -->
+<section class="formcard step-card">
+                    <div class="step-head"><span class="step-number">2</span><div><h3>Podaci o proslavi</h3><p>Ovi podaci služe samo za organizaciju i kontakt.</p></div></div>
+                    <div class="fields">
+                        <label>Ime roditelja<input required name="parentName" autocomplete="name"></label>
+                        <label>Telefon<input required type="tel" name="phone" autocomplete="tel"></label>
+                        <label>Email<input required type="email" name="email" autocomplete="email"></label>
+                        <label>Ime deteta<input required name="childName"></label>
+                        <label>Uzrast<input required type="number" min="1" max="15" name="childAge" value="7"></label>
+                        <label>Broj dece<input required type="number" min="5" max="40" name="numberOfChildren" id="children" value="15"></label>
+                    </div>
+                    <div id="minimumChargeNotice" class="minimum-charge-notice" hidden>
+                        <strong>Napomena o minimalnoj naplati</strong>
+                        <p>Minimalna naplata rođendana obračunava se za 12 dece. Ako na proslavi bude manje od 12 dece, izabrani meni će se obračunati kao za 12 dece.</p>
+                    </div>
+                </section>
+
+                                <!-- KORAK 3: meni iz baze; data-price koristi booking.js za procenu. -->
+<section class="formcard step-card">
+                    <div class="step-head"><span class="step-number">3</span><div><h3>Meni za decu</h3><p>Od izabranog menija i broja dece zavisi osnovna cena rođendana.</p></div></div>
+                    <div class="choice-grid">
+                        <label class="choice" th:each="m:${menus}">
+                            <input required type="radio" name="menuId" th:value="${m.id}" th:attr="data-price=${m.pricePerChild}">
+                            <span class="choice-copy"><strong th:text="${m.name}"></strong><small th:text="${m.description}"></small></span>
+                            <b th:text="${#numbers.formatDecimal(m.pricePerChild,0,'POINT',0,'COMMA')}+' RSD / dete'"></b>
+                        </label>
+                    </div>
+                    <div class="included-inline">U cenu po detetu ulaze: 1,5h igraonice, grickalice, sokići, animatorke, muzika i izabrani meni.</div>
+                </section>
+
+                                <!-- KORAK 4: opcione dodatne usluge. -->
+<section class="formcard step-card">
+                    <div class="step-head"><span class="step-number">4</span><div><h3>Dodatne usluge</h3><p>Opciono — izaberite samo ono što želite.</p></div></div>
+                    <div class="choice-grid extras-choice-grid">
+                        <label class="choice" th:each="e:${extras}">
+                            <input type="checkbox" name="extraIds" th:value="${e.id}" th:attr="data-price=${e.price}">
+                            <span class="choice-copy"><strong th:text="${e.emoji+' '+e.name}"></strong><small th:text="${e.description}"></small></span>
+                            <b th:text="'+'+${#numbers.formatDecimal(e.price,0,'POINT',0,'COMMA')}+' RSD'"></b>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="formcard step-card">
+                    <div class="step-head"><span class="step-number">5</span><div><h3>Napomena</h3><p>Dodajte alergije, detalje oko torte ili druge važne informacije.</p></div></div>
+                    <textarea name="parentNote" rows="4" placeholder="Npr. torta stiže 30 minuta ranije, jedno dete ima alergiju..."></textarea>
+                </section>
+
+                <button class="btn big booking-submit" type="submit">Pošalji zahtev za rezervaciju</button>
+                <p class="form-disclaimer">Slanjem zahteva termin još nije konačno rezervisan. Igraonica će vas kontaktirati radi potvrde.</p>
+            </form>
+        </div>
+
+                <!-- DESNA KOLONA: samo okvirna procena, ne konačan račun. -->
+<aside class="booking-summary">
+            <span class="summary-label">Pregled</span>
+            <h3>Okvirna cena</h3>
+            <strong id="estimate" class="summary-price">Izaberite meni</strong>
+            <div class="summary-separator"></div>
+            <p>Procena se računa prema broju dece, izabranom meniju i dodatnim uslugama. Minimalna naplata menija je za 12 dece.</p>
+            <div class="summary-tip"><span>i</span><p>Piće i druga potrošnja odraslih gostiju u lokalu nisu uključeni u ovu procenu i obračunavaju se prema stvarnoj potrošnji.</p></div>
+        </aside>
+    </div>
+</main>
+
+<script th:src="@{/js/booking.js}"></script>
+</body>
+</html>
